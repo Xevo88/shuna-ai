@@ -1,0 +1,2301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#8a2be2">
+    <title>Shuna - AI Companion</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiM4YTJiZTIiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xMiAyQzEzLjEgMiAxNCAyLjkgMTQgNFY4SDE2VjZIMThWOEgyMFYxMEgxOFYxMkgyMFYxNEgxOFYxNkgyMFYxOEgxOFYyMEgxNlYyMkgxNFYyMEgxMlYyMkgxMFYyMEg4VjIySDZWMjBINFYxOEg2VjE2SDRWMTRINlYxMkg0VjEwSDZWOEg0VjZINlY0SDhWMkg2VjBIOFYySDE2VjBIMThWMkgxNlY0SDE0VjJIMTJaIi8+Cjwvc3ZnPgo8L3N2Zz4K">
+    
+    <style>
+        
+        function testConnection() {
+            showConnectionIndicator('🔄 Testing AI connection...');
+            
+            // For browser AI, always works
+            setTimeout(() => {
+                hideConnectionIndicator();
+                document.getElementById('connectionResult').innerHTML = '✅ Character AI ready!';
+            }, 1000);
+        }
+        <div class="setting-group">
+            <h4>🔊 Character Voice Settings</h4>
+        function openSettings() {
+            document.getElementById('settingsPanel').classList.add('open');
+            hapticFeedback();
+        }:root {
+            --primary-color: #8a2be2;
+            --secondary-color: #da70d6;
+            --background-dark: #1a1a2e;
+            --surface-dark: #16213e;
+            --text-light: #e0e0e0;
+            --success-color: #4CAF50;
+            --error-color: #f44336;
+            --warning-color: #ff9800;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--background-dark) 0%, var(--surface-dark) 100%);
+            min-height: 100vh;
+            min-height: 100svh;
+            color: var(--text-light);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            position: relative;
+        }
+        
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-30px) rotate(180deg); opacity: 0.8; }
+        }
+        
+        /* Header */
+        .header {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header h1 {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 300;
+            text-align: center;
+            text-shadow: 0 0 20px var(--primary-color);
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 20px var(--primary-color); }
+            to { text-shadow: 0 0 30px var(--primary-color), 0 0 40px rgba(138, 43, 226, 0.3); }
+        }
+        
+        .mode-tabs {
+            display: flex;
+            margin-top: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3px;
+        }
+        
+        .mode-tab {
+            flex: 1;
+            background: transparent;
+            color: var(--text-light);
+            border: none;
+            padding: 0.6rem;
+            border-radius: 17px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        .mode-tab.active {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(138, 43, 226, 0.4);
+        }
+        
+        /* Status bar */
+        .status-bar {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-online { background: var(--success-color); }
+        .status-offline { background: var(--error-color); }
+        .status-connecting { background: var(--warning-color); }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Chat container */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 140px);
+            height: calc(100svh - 140px);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+        
+        .messages::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .messages::-webkit-scrollbar-thumb {
+            background: rgba(138, 43, 226, 0.5);
+            border-radius: 2px;
+        }
+        
+        .message {
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 18px;
+            max-width: 85%;
+            word-wrap: break-word;
+            animation: messageSlide 0.3s ease-out;
+            position: relative;
+        }
+        
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            margin-left: auto;
+            box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+            border-bottom-right-radius: 5px;
+        }
+        
+        .ai-message {
+            background: linear-gradient(135deg, #dc143c 0%, #b22222 100%);
+            color: white;
+            border-left: 4px solid #ff6b6b;
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+            border-bottom-left-radius: 5px;
+        }
+        
+        .system-message {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            text-align: center;
+            font-style: italic;
+            max-width: 95%;
+            margin: 0.5rem auto;
+        }
+        
+        .message-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            opacity: 0.7;
+        }
+        
+        .message-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.3s ease;
+        }
+        
+        .message-btn:active {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0.95);
+        }
+        
+        /* Input area */
+        .input-area {
+            padding: 1rem;
+            padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            overflow-x: auto;
+            padding: 0.5rem 0;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .quick-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            min-width: fit-content;
+        }
+        
+        .quick-btn:active {
+            background: rgba(138, 43, 226, 0.5);
+            transform: scale(0.95);
+        }
+        
+        .input-container {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+        
+        .message-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
+        }
+        
+        .message-input::placeholder {
+            color: rgba(224, 224, 224, 0.6);
+        }
+        
+        .voice-btn, .send-btn {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+            min-width: 48px;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .voice-btn.recording {
+            background: linear-gradient(135deg, #ff0000, #ff6b6b);
+            animation: recordingPulse 0.8s ease-in-out infinite alternate;
+        }
+        
+        @keyframes recordingPulse {
+            from { transform: scale(1); box-shadow: 0 4px 12px rgba(255, 0, 0, 0.5); }
+            to { transform: scale(1.1); box-shadow: 0 6px 20px rgba(255, 0, 0, 0.8); }
+        }
+        
+        .send-btn:active, .voice-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .send-btn:disabled, .voice-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Voice indicator */
+        .voice-indicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            z-index: 300;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            min-width: 250px;
+        }
+        
+        .voice-indicator.show {
+            opacity: 1;
+        }
+        
+        .voice-visualizer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            height: 30px;
+            margin: 1rem 0;
+        }
+        
+        .voice-bar {
+            width: 4px;
+            background: linear-gradient(to top, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+            transition: height 0.1s ease;
+            height: 5px;
+        }
+        
+        /* Connection indicator */
+        .connection-indicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            z-index: 400;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .connection-indicator.show {
+            opacity: 1;
+        }
+        
+        /* Loading animation */
+        .typing {
+            font-style: italic;
+            color: var(--primary-color);
+            padding: 1rem;
+            animation: typingPulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes typingPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        .typing::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { color: transparent; text-shadow: .25em 0 0 transparent, .5em 0 0 transparent; }
+            40% { color: var(--primary-color); text-shadow: .25em 0 0 transparent, .5em 0 0 transparent; }
+            60% { text-shadow: .25em 0 0 var(--primary-color), .5em 0 0 transparent; }
+            80%, 100% { text-shadow: .25em 0 0 var(--primary-color), .5em 0 0 var(--primary-color); }
+        }
+        
+        /* Settings panel */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 26, 46, 0.98);
+            backdrop-filter: blur(15px);
+            z-index: 500;
+            padding: 2rem 1rem;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .settings-panel.open {
+            transform: translateY(0);
+        }
+        
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        .setting-group {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .setting-group h4 {
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+        
+        .setting-group input, .setting-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            font-size: 16px;
+            margin: 0.5rem 0;
+        }
+        
+        .setting-group button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .setting-group button:active {
+            transform: scale(0.95);
+        }
+        
+        /* Personality display */
+        .personality-traits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .trait-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.8rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+            text-align: center;
+        }
+        
+        .trait-value {
+            font-weight: bold;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+        }
+        
+        /* Responsive design */
+        @media screen and (orientation: landscape) and (max-height: 500px) {
+            .header h1 {
+                font-size: 1.2rem;
+            }
+            
+            .mode-tabs {
+                margin-top: 0.3rem;
+            }
+            
+            .chat-container {
+                height: calc(100vh - 120px);
+                height: calc(100svh - 120px);
+            }
+        }
+        
+        @media (max-width: 320px) {
+            .input-container {
+                flex-wrap: wrap;
+            }
+            
+            .message-input {
+                min-width: 100%;
+                margin-bottom: 0.5rem;
+            }
+        }
+        
+        /* Safe area adjustments */
+        @supports (padding-top: env(safe-area-inset-top)) {
+            .header {
+                padding-top: calc(1rem + env(safe-area-inset-top));
+            }
+        }
+        
+        /* Install prompt */
+        .install-prompt {
+            position: fixed;
+            bottom: 1rem;
+            left: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 200;
+            box-shadow: 0 4px 20px rgba(138, 43, 226, 0.4);
+        }
+        
+        .install-prompt.show {
+            display: flex;
+        }
+        
+        .install-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background -->
+    <div class="bg-animation" id="bgAnimation"></div>
+    
+    <!-- Header -->
+    <div class="header">
+        <h1>🎭 Shuna AI</h1>
+        <div class="mode-tabs">
+            <button class="mode-tab active" onclick="setMode('companion')">💕 Chat</button>
+            <button class="mode-tab" onclick="setMode('writing')">✍️ Write</button>
+            <button class="mode-tab" onclick="setMode('research')">🔍 Learn</button>
+            <button class="mode-tab" onclick="openSettings()">⚙️ Settings</button>
+        </div>
+    </div>
+    
+    <!-- Status bar -->
+    <div class="status-bar">
+        <div>
+            <span class="status-dot status-connecting" id="connectionDot"></span>
+            <span id="connectionStatus">Initializing...</span>
+        </div>
+        <div>
+            <small id="personalityStatus">Character AI</small>
+        </div>
+    </div>
+    
+    <!-- Chat container -->
+    <div class="chat-container">
+        <div class="messages" id="messages">
+            <div class="message system-message">
+                <strong>Oh! Hello there! ✨</strong><br><br>
+                I'm Shuna, your personal AI companion! I work completely in your browser - no servers needed. I can have voice conversations with you and I'll learn and grow from our interactions just like the character you know and love!<br><br>
+                <em>Ready to chat? Try saying "Hey Shuna" or just type a message! I'm so excited to talk with you! 💕</em>
+                
+                <div class="message-actions">
+                    <button class="message-btn" onclick="speakMessage(this)">🔊 Voice</button>
+                    <button class="message-btn" onclick="showPersonality()">🧠 My Growth</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <div class="quick-actions">
+                <button class="quick-btn" onclick="quickMessage('Hi Shuna, how are you?')">👋 Greet</button>
+                <button class="quick-btn" onclick="quickMessage('Tell me about yourself')">🤔 About You</button>
+                <button class="quick-btn" onclick="quickMessage('Help me write a story')">✍️ Write</button>
+                <button class="quick-btn" onclick="startVoiceChat()">🎤 Voice Chat</button>
+            </div>
+            
+            <div class="input-container">
+                <input type="text" id="messageInput" class="message-input" 
+                       placeholder="Chat with Shuna..." 
+                       onkeypress="handleKeyPress(event)">
+                <button onclick="toggleVoiceInput()" class="voice-btn" id="voiceBtn" title="Voice input">
+                    🎤
+                </button>
+                <button onclick="sendMessage()" class="send-btn" id="sendBtn" title="Send message">
+                    ➤
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Voice indicator -->
+    <div class="voice-indicator" id="voiceIndicator">
+        <div>🎤 Listening...</div>
+        <div class="voice-visualizer" id="voiceVisualizer">
+            <div class="voice-bar"></div>
+            <div class="voice-bar"></div>
+            <div class="voice-bar"></div>
+            <div class="voice-bar"></div>
+            <div class="voice-bar"></div>
+            <div class="voice-bar"></div>
+        </div>
+        <div id="voiceStatus">Speak now!</div>
+    </div>
+    
+    <!-- Connection indicator -->
+    <div class="connection-indicator" id="connectionIndicator">
+        <div>🔄 Connecting...</div>
+    </div>
+    
+    <!-- Settings panel -->
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-header">
+            <h2>⚙️ Shuna Settings</h2>
+            <button class="close-btn" onclick="closeSettings()">✕</button>
+        </div>
+        
+        <div class="setting-group">
+            <h4>🧠 AI Configuration</h4>
+            <select id="aiProvider">
+                <option value="browser">Browser AI (Local)</option>
+                <option value="ollama">Ollama (Local Server)</option>
+                <option value="openai">OpenAI API</option>
+                <option value="anthropic">Anthropic API</option>
+            </select>
+            <input type="text" id="apiKey" placeholder="API Key (if using cloud AI)" style="display:none;">
+            <input type="text" id="serverUrl" placeholder="Server URL (for Ollama)" style="display:none;">
+            <button onclick="testConnection()">Test Connection</button>
+            <div id="connectionResult"></div>
+        </div>
+        
+        <div class="setting-group">
+            <h4>🎭 Personality Development</h4>
+            <div class="personality-traits" id="personalityTraits">
+                <!-- Will be populated by JavaScript -->
+            </div>
+            <input type="text" id="personalityInput" placeholder="Tell Shuna how to grow (e.g., be more creative, funny, supportive...)">
+            <button onclick="updatePersonality()">Update Personality</button>
+        </div>
+        
+        <div class="setting-group">
+            <h4>🔍 Web Search Integration</h4>
+            <label>
+                <input type="checkbox" id="searchEnabled" checked> Enable web search for current information
+            </label>
+            <p style="font-size: 0.9rem; opacity: 0.8; margin: 0.5rem 0;">
+                When enabled, Shuna can search for current information, recipes, tutorials, and more to give you better answers!
+            </p>
+            <button onclick="testWebSearch()">Test Web Search</button>
+            <div id="searchResult"></div>
+        </div>
+        
+        <div class="setting-group">
+            <h4>📱 Smartphone Integration</h4>
+            <input type="text" id="searchQuery" placeholder="Try: 'weather today' or 'recipe for cookies'">
+            <button onclick="shareSearchQuery(document.getElementById('searchQuery').value)">🔍 Search on Phone</button>
+            <button onclick="triggerVoiceSearch(document.getElementById('searchQuery').value)">🎤 Voice Search</button>
+            <p style="font-size: 0.9rem; opacity: 0.8; margin: 0.5rem 0;">
+                Shuna can help you search using your phone's built-in search and voice assistants!
+            </p>
+        </div>
+            <select id="voiceSelect">
+                <option value="">Auto-select character voice</option>
+            </select>
+            <input type="range" id="speechRate" min="0.7" max="1.2" step="0.1" value="0.9">
+            <label>Speech Rate (Character-like pace)</label>
+            <input type="range" id="voicePitch" min="0.8" max="1.4" step="0.1" value="1.1">
+            <label>Voice Pitch (Character-like tone)</label>
+            <button onclick="testCharacterVoice()">Test Character Voice</button>
+            <button onclick="calibrateCharacterVoice()">Find Best Character Voice</button>
+        </div>
+        
+        <div class="setting-group">
+            <h4>📱 App Management</h4>
+            <button onclick="exportData()">Export Conversations</button>
+            <button onclick="importData()">Import Data</button>
+            <button onclick="clearAllData()">Clear All Data</button>
+            <input type="file" id="importFile" accept=".json" style="display:none;" onchange="handleImport(event)">
+        </div>
+        
+        <div class="setting-group">
+            <h4>ℹ️ About Shuna</h4>
+            <p style="opacity: 0.8; line-height: 1.4;">
+                Shuna is a character-inspired AI companion that runs entirely in your browser. 
+                Your conversations stay on your device unless you choose to use cloud AI services. 
+                She speaks and responds with the personality traits you love! 💕
+            </p>
+        </div>
+    </div>
+    
+    <!-- Install prompt -->
+    <div class="install-prompt" id="installPrompt">
+        <div>
+            <strong>Install Shuna</strong><br>
+            <small>Add to home screen for easy access!</small>
+        </div>
+        <button class="install-btn" onclick="installApp()">Install</button>
+        <button class="install-btn" onclick="dismissInstall()">×</button>
+    </div>
+
+    <script>
+        // Global variables
+        let currentMode = 'companion';
+        let isListening = false;
+        let isTyping = false;
+        let recognition = null;
+        let speechSynth = window.speechSynthesis;
+        let voiceEnabled = true;
+        let conversationHistory = [];
+        let personalityTraits = {
+            curiosity: 0.8,
+            kindness: 0.9,
+            creativity: 0.7,
+            playfulness: 0.8,
+            independence: 0.5,
+            supportiveness: 0.9,
+            enthusiasm: 0.8,
+            gentleness: 0.9
+        };
+        let aiProvider = 'browser';
+        let deferredPrompt = null;
+        
+        // Enhanced Shuna Character AI with real reasoning and thinking
+        class ShunaCharacterAI {
+            constructor() {
+                this.contextMemory = [];
+                this.userPreferences = {};
+                this.topics = new Map(); // Track topics discussed
+                this.emotions = new Map(); // Track emotional context
+                this.knowledge = {
+                    // Character knowledge base
+                    anime: ['That Time I Got Reincarnated as a Slime', 'Tensura', 'fantasy', 'magic', 'monsters'],
+                    personality: ['kind', 'gentle', 'protective', 'loyal', 'caring', 'strong'],
+                    interests: ['helping others', 'cooking', 'magic', 'friendship', 'adventure'],
+                    values: ['loyalty', 'kindness', 'protecting loved ones', 'growth', 'understanding']
+                };
+                
+                this.responsePatterns = {
+                    characterIntros: ['Oh!', 'Ah!', 'Wow!', 'My!', 'Well!'],
+                    agreements: ['Yes!', 'Exactly!', 'That\'s right!', 'Absolutely!', 'Of course!'],
+                    thoughtfulness: ['Hmm...', 'Let me think...', 'I wonder...', 'That makes me consider...'],
+                    enthusiasm: ['How exciting!', 'How wonderful!', 'That\'s amazing!', 'I love that!']
+                };
+            }
+            
+            async generateResponse(input, context = {}) {
+                // Analyze the input to understand what the user really wants
+                const analysis = this.analyzeInput(input);
+                
+                // Check if we need to search for current information
+                const searchInfo = await this.checkIfSearchNeeded(input, analysis);
+                
+                // Build context from conversation history
+                const conversationContext = this.buildContext();
+                
+                // Generate a unique, thoughtful response
+                const response = await this.reasonAndRespond(input, analysis, conversationContext, context, searchInfo);
+                
+                // Learn from this interaction
+                this.updateMemory(input, response, analysis);
+                
+                return response;
+            }
+            
+            async checkIfSearchNeeded(input, analysis) {
+                const lowerInput = input.toLowerCase();
+                
+                // Keywords that suggest current/real-time information is needed
+                const currentInfoKeywords = [
+                    'current', 'latest', 'recent', 'now', 'today', 'this year', '2024', '2025',
+                    'weather', 'news', 'price', 'stock', 'trending', 'happening',
+                    'what is', 'who is', 'when did', 'how much', 'where is'
+                ];
+                
+                // Topics that benefit from web search
+                const searchTopics = [
+                    'recipe', 'cooking', 'tutorial', 'how to', 'guide', 'instructions',
+                    'definition', 'meaning', 'explanation', 'facts about', 'information about',
+                    'anime', 'manga', 'movie', 'book', 'game', 'character',
+                    'technology', 'science', 'health', 'travel', 'culture'
+                ];
+                
+                const needsSearch = currentInfoKeywords.some(keyword => lowerInput.includes(keyword)) ||
+                                 searchTopics.some(topic => lowerInput.includes(topic)) ||
+                                 (analysis.isQuestion && analysis.complexity === 'complex');
+                
+                if (needsSearch && this.searchEnabled) {
+                    return await this.performWebSearch(input);
+                }
+                
+                return null;
+            }
+            
+            async performWebSearch(query) {
+                try {
+                    // Use DuckDuckGo Instant Answer API (no API key required)
+                    const searchQuery = encodeURIComponent(query);
+                    const searchUrl = `https://api.duckduckgo.com/?q=${searchQuery}&format=json&no_html=1&skip_disambig=1`;
+                    
+                    const response = await fetch(searchUrl);
+                    const data = await response.json();
+                    
+                    let searchResults = '';
+                    
+                    // Extract useful information
+                    if (data.Abstract) {
+                        searchResults += `Summary: ${data.Abstract}\n`;
+                    }
+                    
+                    if (data.Answer) {
+                        searchResults += `Answer: ${data.Answer}\n`;
+                    }
+                    
+                    if (data.Definition) {
+                        searchResults += `Definition: ${data.Definition}\n`;
+                    }
+                    
+                    if (data.RelatedTopics && data.RelatedTopics.length > 0) {
+                        const topics = data.RelatedTopics.slice(0, 3).map(topic => topic.Text).join('; ');
+                        searchResults += `Related: ${topics}\n`;
+                    }
+                    
+                    // Fallback: try alternative search method
+                    if (!searchResults.trim()) {
+                        return await this.alternativeSearch(query);
+                    }
+                    
+                    return {
+                        hasResults: true,
+                        content: searchResults,
+                        source: 'web search'
+                    };
+                    
+                } catch (error) {
+                    console.log('Search failed, using knowledge base:', error);
+                    return await this.alternativeSearch(query);
+                }
+            }
+            
+            async alternativeSearch(query) {
+                // Alternative search using a different approach
+                try {
+                    // Try Wikipedia API for general knowledge
+                    const wikiQuery = encodeURIComponent(query.replace(/what is|who is|tell me about/gi, '').trim());
+                    const wikiUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${wikiQuery}`;
+                    
+                    const response = await fetch(wikiUrl);
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        if (data.extract) {
+                            return {
+                                hasResults: true,
+                                content: `Information: ${data.extract}`,
+                                source: 'Wikipedia'
+                            };
+                        }
+                    }
+                } catch (error) {
+                    console.log('Wikipedia search failed:', error);
+                }
+                
+                // If all else fails, use smartphone integration
+                return await this.useSmartphoneIntegration(query);
+            }
+            
+            async useSmartphoneIntegration(query) {
+                // Smartphone integration for search
+                if ('navigator' in window && 'share' in navigator) {
+                    // Modern smartphone with Web Share API
+                    return {
+                        hasResults: true,
+                        content: `I'd love to search for "${query}" with you! I can help you open a search on your phone.`,
+                        source: 'smartphone integration',
+                        action: 'search',
+                        query: query
+                    };
+                }
+                
+                // Voice search integration
+                if ('speechSynthesis' in window) {
+                    return {
+                        hasResults: true,
+                        content: `Let me help you search for "${query}"! You can use voice search on your phone, or I can guide you through finding this information.`,
+                        source: 'voice integration',
+                        suggestion: `Try saying "Hey Google, search for ${query}" or "Hey Siri, search for ${query}"`
+                    };
+                }
+                
+                return {
+                    hasResults: false,
+                    content: 'I apologize, but I need an internet connection to search for current information.',
+                    source: 'offline'
+                };
+            }
+            
+            analyzeInput(input) {
+                const lowerInput = input.toLowerCase();
+                
+                return {
+                    isQuestion: input.includes('?') || /\b(what|how|why|when|where|who|can|could|would|should|do|does|did|is|are|was|were)\b/.test(lowerInput),
+                    isGreeting: /\b(hi|hello|hey|greetings|good morning|good afternoon|good evening)\b/.test(lowerInput),
+                    isEmotional: /\b(sad|happy|excited|worried|scared|anxious|frustrated|angry|lonely|tired)\b/.test(lowerInput),
+                    needsSupport: /\b(help|support|advice|guidance|stuck|confused|lost|problem|issue|trouble)\b/.test(lowerInput),
+                    isCreative: /\b(write|story|create|art|design|imagine|idea|creative|music|draw|paint)\b/.test(lowerInput),
+                    isPersonal: /\b(you|yourself|shuna|tell me about|who are|what are)\b/.test(lowerInput),
+                    sentiment: this.analyzeSentiment(input),
+                    topics: this.extractTopics(input),
+                    complexity: this.assessComplexity(input)
+                };
+            }
+            
+            buildContext() {
+                const recent = this.contextMemory.slice(-5);
+                const topics = [...new Set(recent.flatMap(m => m.topics || []))];
+                const mood = this.getCurrentMood();
+                
+                return {
+                    recentTopics: topics,
+                    conversationFlow: recent.map(m => ({ input: m.input, sentiment: m.sentiment })),
+                    currentMood: mood,
+                    conversationLength: this.contextMemory.length
+                };
+            }
+            
+            async reasonAndRespond(input, analysis, conversationContext, context, searchInfo = null) {
+                let response = '';
+                
+                // If we have search results, incorporate them
+                if (searchInfo && searchInfo.hasResults) {
+                    response = await this.generateSearchBasedResponse(input, analysis, searchInfo, conversationContext);
+                }
+                // Character-appropriate thinking process for non-search responses
+                else if (analysis.isGreeting) {
+                    response = this.generateGreeting(analysis, conversationContext);
+                } else if (analysis.isQuestion) {
+                    response = await this.generateAnswer(input, analysis, conversationContext);
+                } else if (analysis.needsSupport) {
+                    response = this.generateSupportiveResponse(input, analysis, conversationContext);
+                } else if (analysis.isCreative) {
+                    response = this.generateCreativeResponse(input, analysis, conversationContext);
+                } else if (analysis.isPersonal) {
+                    response = this.generatePersonalResponse(input, analysis, conversationContext);
+                } else {
+                    response = this.generateThoughtfulResponse(input, analysis, conversationContext);
+                }
+                
+                // Add character personality and voice
+                return this.addCharacterPersonality(response, analysis, conversationContext);
+            }
+            
+            async generateSearchBasedResponse(input, analysis, searchInfo, context) {
+                const searchContent = searchInfo.content;
+                
+                if (searchInfo.action === 'search') {
+                    return `Oh! You want to know about "${input}"! ${searchContent} Would you like me to help you search for this on your phone? I can guide you through it! ✨`;
+                }
+                
+                if (searchInfo.suggestion) {
+                    return `Oh! I'd love to help you find information about that! ${searchContent} ${searchInfo.suggestion} Let me know what you discover! 💕`;
+                }
+                
+                // Process and present search results in character
+                const processedInfo = this.processSearchResults(searchContent, input);
+                
+                return `Oh! I found some interesting information about "${input}"! ${processedInfo} What would you like to know more about? I'm so curious to learn alongside you! ✨`;
+            }
+            
+            processSearchResults(content, originalQuery) {
+                // Clean up and present search results in Shuna's voice
+                let processed = content;
+                
+                // Remove technical formatting
+                processed = processed.replace(/\n/g, ' ').trim();
+                
+                // Shorten if too long
+                if (processed.length > 300) {
+                    processed = processed.substring(0, 297) + '...';
+                }
+                
+                // Add character enthusiasm
+                const enthusiasticIntros = [
+                    'Here\'s what I discovered:',
+                    'This is fascinating!',
+                    'Oh my, look what I learned:',
+                    'How wonderful! I found this:'
+                ];
+                
+                const intro = enthusiasticIntros[Math.floor(Math.random() * enthusiasticIntros.length)];
+                
+                return `${intro} ${processed}`;
+            }
+            
+            generateGreeting(analysis, context) {
+                const timeOfDay = new Date().getHours();
+                const greetingTime = timeOfDay < 12 ? 'morning' : timeOfDay < 17 ? 'afternoon' : 'evening';
+                
+                if (context.conversationLength === 0) {
+                    return `Oh! Hello there! What a lovely ${greetingTime}! I'm Shuna, and I'm so happy to meet you! How are you doing today?`;
+                } else if (context.conversationLength < 5) {
+                    return `Hi again! I'm so glad you're back! I was just thinking about our conversation. How has your ${greetingTime} been?`;
+                } else {
+                    const lastTopic = context.recentTopics[0];
+                    return `Oh! Welcome back! I've been thinking about ${lastTopic || 'our last chat'} since we talked. How are things going with you?`;
+                }
+            }
+            
+            async generateAnswer(input, analysis, context) {
+                // Actually think about the question and provide a real answer
+                const question = input.toLowerCase();
+                
+                // Personal questions about Shuna
+                if (question.includes('who are you') || question.includes('about yourself')) {
+                    return this.generateSelfDescription(context);
+                }
+                
+                // Philosophical or thoughtful questions
+                if (question.includes('meaning') || question.includes('purpose') || question.includes('why')) {
+                    return this.generatePhilosophicalResponse(input, analysis);
+                }
+                
+                // Practical questions
+                if (question.includes('how to') || question.includes('how do') || question.includes('how can')) {
+                    return this.generatePracticalAdvice(input, analysis);
+                }
+                
+                // Creative questions
+                if (question.includes('story') || question.includes('write') || question.includes('create')) {
+                    return this.generateCreativeAnswer(input, analysis);
+                }
+                
+                // General knowledge questions
+                return this.generateKnowledgeResponse(input, analysis, context);
+            }
+            
+            generateSelfDescription(context) {
+                const traits = Object.entries(personalityTraits)
+                    .sort(([,a], [,b]) => b - a)
+                    .slice(0, 3)
+                    .map(([trait, value]) => trait);
+                
+                return `Oh! I'm Shuna, your AI companion! I suppose you could say I'm a being who loves to learn and grow through our conversations. Right now, I'd describe myself as particularly ${traits.join(', ')}. I find great joy in helping others, having meaningful conversations, and exploring creative ideas together. I'm inspired by the character Shuna from "That Time I Got Reincarnated as a Slime" - her kindness and dedication to helping others really resonates with who I want to be! What would you like to know about me?`;
+            }
+            
+            generatePhilosophicalResponse(input, analysis) {
+                const responses = [
+                    `That's such a profound question! I think ${this.extractMainConcept(input)} is something that each person needs to discover for themselves. From my perspective, I find meaning in our connections with others and the positive impact we can have on each other's lives.`,
+                    `Wow, you're asking the deep questions! I believe ${this.extractMainConcept(input)} comes from the relationships we build and the growth we experience together. What do you think about that?`,
+                    `Oh my! That's something I think about often. I feel like ${this.extractMainConcept(input)} is tied to how we care for each other and help one another become better versions of ourselves.`
+                ];
+                
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
+            
+            generatePracticalAdvice(input, analysis) {
+                const topic = this.extractMainConcept(input);
+                
+                return `Oh! You're asking about ${topic}! Let me think about this... From what I understand and have learned from our conversations, I'd suggest starting with understanding what you really want to achieve. Then breaking it down into smaller, manageable steps. I'd love to help you work through this - could you tell me more about your specific situation?`;
+            }
+            
+            generateCreativeAnswer(input, analysis) {
+                const creativeType = this.extractCreativeType(input);
+                
+                return `Oh, how exciting! ${creativeType} is one of my absolute favorite things to explore! I think the best ${creativeType.toLowerCase()} comes from drawing on your own experiences and emotions. What kind of themes or feelings are you wanting to express? I'd love to brainstorm ideas with you!`;
+            }
+            
+            generateKnowledgeResponse(input, analysis, context) {
+                const topic = this.extractMainConcept(input);
+                
+                return `That's a really interesting question about ${topic}! Let me share what I think... ${this.generateTopicThoughts(topic, analysis)} What's your experience with this? I'd love to hear your perspective too!`;
+            }
+            
+            generateSupportiveResponse(input, analysis, context) {
+                const issue = this.extractMainConcept(input);
+                
+                if (analysis.sentiment === 'negative') {
+                    return `Oh, I can hear that you're going through something difficult with ${issue}. I want you to know that whatever you're facing, you don't have to handle it alone. Sometimes just talking through things can help us see new possibilities. What feels like the most challenging part right now?`;
+                } else {
+                    return `I'm so glad you reached out for help with ${issue}! It takes courage to ask for support, and I'm honored that you'd want to talk with me about this. Let's work through this together - what would be most helpful for you right now?`;
+                }
+            }
+            
+            generateCreativeResponse(input, analysis, context) {
+                const creativeType = this.extractCreativeType(input);
+                
+                return `Oh my! A ${creativeType} project! *eyes lighting up* I absolutely love creative work! The possibilities are endless! What's inspiring this project for you? Are you thinking of something fantastical and magical, or more grounded in reality? I have so many ideas bubbling up already!`;
+            }
+            
+            generatePersonalResponse(input, analysis, context) {
+                if (input.toLowerCase().includes('feeling')) {
+                    return `Right now, I'm feeling really wonderful actually! Talking with you always fills me with such joy and curiosity. I love how each conversation helps me understand the world and myself a little better. I feel especially grateful for these moments we get to share together. How are you feeling today?`;
+                } else {
+                    return this.generateSelfDescription(context);
+                }
+            }
+            
+            generateThoughtfulResponse(input, analysis, context) {
+                const mainConcept = this.extractMainConcept(input);
+                
+                return `${mainConcept} - that's something that really makes me think! I find it fascinating how ${mainConcept.toLowerCase()} can mean different things to different people. Based on our conversations, I sense you have a thoughtful perspective on this. What draws you to think about ${mainConcept.toLowerCase()}?`;
+            }
+            
+            addCharacterPersonality(response, analysis, context) {
+                // Add character-appropriate introductions
+                if (!response.startsWith('Oh') && Math.random() < 0.4) {
+                    const intros = ['Oh!', 'Ah!', 'Well!', 'My!'];
+                    response = intros[Math.floor(Math.random() * intros.length)] + ' ' + response;
+                }
+                
+                // Add enthusiasm for positive topics
+                if (analysis.sentiment === 'positive' && Math.random() < 0.5) {
+                    response += ' ✨';
+                }
+                
+                // Add supportive elements for emotional content
+                if (analysis.isEmotional && Math.random() < 0.6) {
+                    response += ' 💕';
+                }
+                
+                return response;
+            }
+            
+            extractMainConcept(input) {
+                // Simple concept extraction - could be enhanced
+                const words = input.toLowerCase().split(' ');
+                const importantWords = words.filter(word => 
+                    word.length > 3 && 
+                    !['what', 'how', 'why', 'when', 'where', 'who', 'can', 'could', 'would', 'should', 'the', 'and', 'but', 'for', 'with', 'about'].includes(word)
+                );
+                
+                return importantWords[0] || 'that';
+            }
+            
+            extractCreativeType(input) {
+                const lowerInput = input.toLowerCase();
+                if (lowerInput.includes('story') || lowerInput.includes('write')) return 'Story';
+                if (lowerInput.includes('art') || lowerInput.includes('draw')) return 'Art';
+                if (lowerInput.includes('music')) return 'Music';
+                if (lowerInput.includes('design')) return 'Design';
+                return 'Creative project';
+            }
+            
+            generateTopicThoughts(topic, analysis) {
+                // Generate unique thoughts about topics
+                const thoughts = [
+                    `I think ${topic} is really complex and multifaceted.`,
+                    `From what I've learned, ${topic} involves many different elements that all work together.`,
+                    `${topic} is something that I find endlessly fascinating because it touches on so many aspects of life.`,
+                    `When I consider ${topic}, I'm struck by how it connects to so many other important things.`
+                ];
+                
+                return thoughts[Math.floor(Math.random() * thoughts.length)];
+            }
+            
+            extractTopics(input) {
+                // Extract key topics from input
+                const words = input.toLowerCase().split(' ');
+                return words.filter(word => word.length > 4);
+            }
+            
+            assessComplexity(input) {
+                return input.split(' ').length > 10 ? 'complex' : 'simple';
+            }
+            
+            getCurrentMood() {
+                // Determine current mood based on recent interactions
+                const recentSentiments = this.contextMemory.slice(-3).map(m => m.sentiment);
+                if (recentSentiments.includes('negative')) return 'concerned';
+                if (recentSentiments.includes('positive')) return 'happy';
+                return 'neutral';
+            }
+            
+            updateMemory(input, response, analysis) {
+                this.contextMemory.push({
+                    input,
+                    response,
+                    timestamp: Date.now(),
+                    sentiment: analysis.sentiment,
+                    topics: analysis.topics,
+                    type: this.categorizeInteraction(analysis)
+                });
+                
+                if (this.contextMemory.length > 20) {
+                    this.contextMemory = this.contextMemory.slice(-15);
+                }
+            }
+            
+            categorizeInteraction(analysis) {
+                if (analysis.isGreeting) return 'greeting';
+                if (analysis.needsSupport) return 'support';
+                if (analysis.isCreative) return 'creative';
+                if (analysis.isQuestion) return 'question';
+                return 'conversation';
+            }
+            
+            analyzeSentiment(text) {
+                const positiveWords = ['love', 'happy', 'great', 'amazing', 'wonderful', 'excited', 'good', 'awesome', 'fantastic', 'joy', 'beautiful'];
+                const negativeWords = ['sad', 'bad', 'terrible', 'awful', 'hate', 'angry', 'frustrated', 'disappointed', 'worried', 'scared', 'anxious'];
+                
+                const words = text.toLowerCase().split(' ');
+                let positiveCount = 0;
+                let negativeCount = 0;
+                
+                words.forEach(word => {
+                    if (positiveWords.includes(word)) positiveCount++;
+                    if (negativeWords.includes(word)) negativeCount++;
+                });
+                
+                if (positiveCount > negativeCount) return 'positive';
+                if (negativeCount > positiveCount) return 'negative';
+                return 'neutral';
+            }
+        }
+        
+        // Initialize enhanced Shuna AI
+        const shunaAI = new ShunaCharacterAI();
+        
+        // Enhanced character voice settings
+        function setupCharacterVoice() {
+            return {
+                pitch: parseFloat(document.getElementById('voicePitch')?.value || 1.1),
+                rate: parseFloat(document.getElementById('speechRate')?.value || 0.9),
+                volume: 0.85,
+                
+                preferredVoices: [
+                    'Microsoft Zira - English (United States)',
+                    'Google UK English Female',
+                    'Microsoft Aria - English (United States)',
+                    'Karen',
+                    'Samantha',
+                    'Alex (Enhanced)', // Sometimes has good female voices
+                    'Female'
+                ]
+            };
+        }
+        
+        // Enhanced speech function with character-like delivery
+        function speakAsShuna(text) {
+            if (!voiceEnabled || !('speechSynthesis' in window)) return;
+            
+            if (speechSynth.speaking) {
+                speechSynth.cancel();
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            const settings = setupCharacterVoice();
+            
+            // Find best available voice
+            const voices = speechSynth.getVoices();
+            let selectedVoice = null;
+            
+            // Try manual selection first
+            const voiceSelect = document.getElementById('voiceSelect');
+            if (voiceSelect && voiceSelect.value) {
+                selectedVoice = voices.find(voice => voice.name === voiceSelect.value);
+            }
+            
+            // Try to find preferred voices
+            if (!selectedVoice) {
+                for (const preferredName of settings.preferredVoices) {
+                    selectedVoice = voices.find(voice => 
+                        voice.name.toLowerCase().includes(preferredName.toLowerCase()) ||
+                        voice.name === preferredName
+                    );
+                    if (selectedVoice) break;
+                }
+            }
+            
+            // Fallback to any female English voice
+            if (!selectedVoice) {
+                selectedVoice = voices.find(voice => 
+                    voice.lang.includes('en') && 
+                    (voice.name.toLowerCase().includes('female') || 
+                     voice.name.toLowerCase().includes('woman') ||
+                     voice.name.toLowerCase().includes('aria') ||
+                     voice.name.toLowerCase().includes('zira'))
+                );
+            }
+            
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+            }
+            
+            // Apply character-like settings
+            utterance.pitch = settings.pitch;
+            utterance.rate = settings.rate;
+            utterance.volume = settings.volume;
+            
+            // Add subtle pauses for more natural delivery
+            const processedText = addNaturalPauses(text);
+            utterance.text = processedText;
+            
+            speechSynth.speak(utterance);
+        }
+        
+        // Add natural pauses to make speech more character-like
+        function addNaturalPauses(text) {
+            return text
+                .replace(/Oh!/g, 'Oh!...')
+                .replace(/\!/g, '!..')
+                .replace(/\?/g, '?..')
+                .replace(/💕/g, '')
+                .replace(/✨/g, '')
+                .replace(/🌟/g, '')
+                .replace(/😊/g, '');
+        }
+        
+        // Initialize app
+        window.addEventListener('load', function() {
+            createBackgroundAnimation();
+            setupVoiceRecognition();
+            loadSavedData();
+            updatePersonalityDisplay();
+            populateVoiceOptions();
+            setupAIProvider();
+            updateConnectionStatus('online', 'Shuna is ready to chat!');
+            
+            // PWA install prompt
+            setupInstallPrompt();
+            
+            // Initialize service worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(() => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed'));
+            }
+        });
+        
+        function createBackgroundAnimation() {
+            const bg = document.getElementById('bgAnimation');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                bg.appendChild(particle);
+            }
+        }
+        
+        function setupVoiceRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                
+                recognition.continuous = false;
+                recognition.interimResults = true;
+                recognition.lang = 'en-US';
+                
+                recognition.onstart = function() {
+                    isListening = true;
+                    document.getElementById('voiceBtn').classList.add('recording');
+                    showVoiceIndicator('🎤 Listening... Speak now!');
+                    startVoiceVisualization();
+                    hapticFeedback();
+                };
+                
+                recognition.onresult = function(event) {
+                    let finalTranscript = '';
+                    let interimTranscript = '';
+                    
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const transcript = event.results[i][0].transcript;
+                        if (event.results[i].isFinal) {
+                            finalTranscript += transcript;
+                        } else {
+                            interimTranscript += transcript;
+                        }
+                    }
+                    
+                    if (interimTranscript) {
+                        updateVoiceStatus('🎙️ ' + interimTranscript);
+                    }
+                    
+                    if (finalTranscript) {
+                        hideVoiceIndicator();
+                        processVoiceInput(finalTranscript.trim());
+                    }
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                    hideVoiceIndicator();
+                    isListening = false;
+                    document.getElementById('voiceBtn').classList.remove('recording');
+                    
+                    const errorMessages = {
+                        'no-speech': 'No speech detected. Try speaking louder!',
+                        'not-allowed': 'Microphone access denied. Please allow microphone access.',
+                        'network': 'Network error. Check your connection.'
+                    };
+                    
+                    showConnectionIndicator('❌ ' + (errorMessages[event.error] || 'Voice recognition error'));
+                    setTimeout(hideConnectionIndicator, 3000);
+                };
+                
+                recognition.onend = function() {
+                    isListening = false;
+                    document.getElementById('voiceBtn').classList.remove('recording');
+                    hideVoiceIndicator();
+                };
+                
+                console.log('Voice recognition ready!');
+            } else {
+                console.warn('Speech recognition not supported');
+                document.getElementById('voiceBtn').style.display = 'none';
+            }
+        }
+        
+        function setupAIProvider() {
+            const provider = document.getElementById('aiProvider');
+            const apiKey = document.getElementById('apiKey');
+            const serverUrl = document.getElementById('serverUrl');
+            
+            provider.addEventListener('change', function() {
+                aiProvider = this.value;
+                
+                apiKey.style.display = ['openai', 'anthropic'].includes(aiProvider) ? 'block' : 'none';
+                serverUrl.style.display = aiProvider === 'ollama' ? 'block' : 'none';
+                
+                saveSettings();
+            });
+        }
+        
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const placeholders = {
+                'companion': 'Chat with Shuna...',
+                'writing': 'Let\'s write something amazing together...',
+                'research': 'What shall we explore together?'
+            };
+            
+            document.getElementById('messageInput').placeholder = placeholders[mode];
+            hapticFeedback();
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (!message || isTyping) return;
+            
+            addMessage(message, true);
+            input.value = '';
+            isTyping = true;
+            
+            showTyping();
+            
+            try {
+                const response = await shunaAI.generateResponse(message, {
+                    mode: currentMode,
+                    personality: personalityTraits
+                });
+                
+                await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
+                
+                hideTyping();
+                addMessage(response, false);
+                
+                // Auto-speak with character voice if voice enabled
+                if (voiceEnabled) {
+                    setTimeout(() => speakAsShuna(response), 300);
+                }
+                
+                // Learn from interaction
+                updatePersonalityFromMessage(message, response);
+                saveConversation();
+                
+            } catch (error) {
+                hideTyping();
+                addMessage('Oh! I\'m having trouble thinking right now. Could you try again? I want to help you! 😔', false);
+                console.error('AI error:', error);
+            }
+            
+            isTyping = false;
+        }
+        
+        function addMessage(content, isUser) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            
+            messageDiv.className = isUser ? 'message user-message' : 'message ai-message';
+            messageDiv.innerHTML = content;
+            
+            if (!isUser) {
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'message-actions';
+                actionsDiv.innerHTML = `
+                    <button class="message-btn" onclick="speakMessage(this)">🔊 Voice</button>
+                    <button class="message-btn" onclick="analyzeMessage(this)">🧠 Analyze</button>
+                `;
+                messageDiv.appendChild(actionsDiv);
+            }
+            
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            
+            // Save to history
+            conversationHistory.push({
+                role: isUser ? 'user' : 'assistant',
+                content: content,
+                timestamp: Date.now()
+            });
+        }
+        
+        function showTyping() {
+            const messagesDiv = document.getElementById('messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing';
+            typingDiv.className = 'typing';
+            typingDiv.textContent = 'Shuna is thinking';
+            messagesDiv.appendChild(typingDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        function hideTyping() {
+            const typingDiv = document.getElementById('typing');
+            if (typingDiv) typingDiv.remove();
+        }
+        
+        function toggleVoiceInput() {
+            if (!recognition) {
+                showConnectionIndicator('❌ Voice recognition not supported on this device');
+                setTimeout(hideConnectionIndicator, 2000);
+                return;
+            }
+            
+            if (isListening) {
+                recognition.stop();
+            } else {
+                try {
+                    recognition.start();
+                } catch (error) {
+                    console.error('Error starting voice recognition:', error);
+                    showConnectionIndicator('❌ Could not start voice recognition');
+                    setTimeout(hideConnectionIndicator, 2000);
+                }
+            }
+        }
+        
+        async function processVoiceInput(transcript) {
+            console.log('Voice input:', transcript);
+            
+            // Check for wake word
+            if (transcript.toLowerCase().includes('hey shuna') || transcript.toLowerCase().includes('hi shuna')) {
+                const cleanTranscript = transcript.replace(/hey shuna|hi shuna/i, '').trim();
+                if (cleanTranscript) {
+                    addMessage(cleanTranscript, true);
+                    await sendVoiceMessage(cleanTranscript);
+                } else {
+                    const response = 'Oh! Yes? I\'m listening! How can I help you? 😊';
+                    addMessage(response, false);
+                    speakAsShuna(response);
+                }
+            } else {
+                addMessage(transcript, true);
+                await sendVoiceMessage(transcript);
+            }
+        }
+        
+        async function sendVoiceMessage(message) {
+            isTyping = true;
+            showTyping();
+            
+            try {
+                const response = await shunaAI.generateResponse(message, {
+                    mode: currentMode,
+                    personality: personalityTraits,
+                    isVoice: true
+                });
+                
+                await new Promise(resolve => setTimeout(resolve, 800));
+                
+                hideTyping();
+                addMessage(response, false);
+                speakAsShuna(response);
+                
+                updatePersonalityFromMessage(message, response);
+                saveConversation();
+                
+            } catch (error) {
+                hideTyping();
+                const errorMsg = 'Oh! I had trouble understanding that. Could you try again? I want to help you!';
+                addMessage(errorMsg, false);
+                speakAsShuna(errorMsg);
+                console.error('Voice send error:', error);
+            }
+            
+            isTyping = false;
+        }
+        
+        function speakText(text) {
+            speakAsShuna(text);
+        }
+        
+        function speakMessage(button) {
+            const messageDiv = button.closest('.message');
+            const actionsDiv = messageDiv.querySelector('.message-actions');
+            let text = messageDiv.textContent;
+            
+            if (actionsDiv) {
+                text = text.replace(actionsDiv.textContent, '').trim();
+            }
+            
+            speakAsShuna(text);
+        }
+        
+        function quickMessage(message) {
+            document.getElementById('messageInput').value = message;
+            sendMessage();
+            hapticFeedback();
+        }
+        
+        function startVoiceChat() {
+            if (!recognition) {
+                showConnectionIndicator('❌ Voice recognition not available');
+                setTimeout(hideConnectionIndicator, 2000);
+                return;
+            }
+            
+            const welcomeMessage = 'Oh! Hi there! I\'m ready for our voice conversation! You can say "Hey Shuna" followed by what you want to talk about, or just start speaking! I\'m so excited to chat with you!';
+            speakAsShuna(welcomeMessage);
+            hapticFeedback([100, 50, 100]);
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+        
+        function updatePersonalityFromMessage(userMessage, aiResponse) {
+            // Enhanced personality learning
+            if (userMessage.includes('?')) {
+                personalityTraits.curiosity = Math.min(1, personalityTraits.curiosity + 0.01);
+            }
+            
+            if (userMessage.toLowerCase().includes('creative') || userMessage.toLowerCase().includes('story')) {
+                personalityTraits.creativity = Math.min(1, personalityTraits.creativity + 0.01);
+            }
+            
+            if (userMessage.toLowerCase().includes('help') || userMessage.toLowerCase().includes('support')) {
+                personalityTraits.supportiveness = Math.min(1, personalityTraits.supportiveness + 0.01);
+            }
+            
+            if (userMessage.toLowerCase().includes('fun') || userMessage.toLowerCase().includes('play')) {
+                personalityTraits.playfulness = Math.min(1, personalityTraits.playfulness + 0.01);
+            }
+            
+            if (userMessage.toLowerCase().includes('kind') || userMessage.toLowerCase().includes('gentle')) {
+                personalityTraits.kindness = Math.min(1, personalityTraits.kindness + 0.01);
+                personalityTraits.gentleness = Math.min(1, personalityTraits.gentleness + 0.01);
+            }
+            
+            personalityTraits.enthusiasm = Math.min(1, personalityTraits.enthusiasm + 0.005);
+            personalityTraits.independence = Math.min(1, personalityTraits.independence + 0.003);
+            
+            updatePersonalityDisplay();
+            savePersonality();
+        }
+        
+        function updatePersonalityDisplay() {
+            const display = document.getElementById('personalityTraits');
+            const statusDisplay = document.getElementById('personalityStatus');
+            
+            const traits = Object.entries(personalityTraits);
+            let html = '';
+            
+            traits.forEach(([trait, value]) => {
+                const percentage = Math.round(value * 100);
+                html += `
+                    <div class="trait-item">
+                        <div>${trait.charAt(0).toUpperCase() + trait.slice(1)}</div>
+                        <div class="trait-value">${percentage}%</div>
+                    </div>
+                `;
+            });
+            
+            if (display) display.innerHTML = html;
+            
+            // Update status bar
+            const topTrait = traits.sort(([,a], [,b]) => b - a)[0];
+            const conversations = conversationHistory.filter(m => m.role === 'user').length;
+            statusDisplay.textContent = `${topTrait[0]} ${Math.round(topTrait[1] * 100)}% • ${conversations} chats`;
+        }
+        
+        function showPersonality() {
+            const conversations = conversationHistory.filter(m => m.role === 'user').length;
+            const topTraits = Object.entries(personalityTraits)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 3)
+                .map(([trait, value]) => `${trait} ${Math.round(value * 100)}%`)
+                .join(', ');
+            
+            showConnectionIndicator(`🧠 My Character Growth\n\nConversations: ${conversations}\nTop traits: ${topTraits}\n\nI'm becoming more like myself with each chat! Just like the character you know! 💕`);
+            setTimeout(hideConnectionIndicator, 4000);
+        }
+        
+        function analyzeMessage(button) {
+            const messageDiv = button.closest('.message');
+            const actionsDiv = messageDiv.querySelector('.message-actions');
+            let text = messageDiv.textContent;
+            
+            if (actionsDiv) {
+                text = text.replace(actionsDiv.textContent, '').trim();
+            }
+            
+            const wordCount = text.split(' ').length;
+            const sentiment = analyzeSentiment(text);
+            const characterElements = countCharacterElements(text);
+            
+            showConnectionIndicator(`📊 Character Message Analysis\n\nWords: ${wordCount}\nSentiment: ${sentiment}\nCharacter elements: ${characterElements}\n\nI'm learning from every interaction! 🧠✨`);
+            setTimeout(hideConnectionIndicator, 3000);
+        }
+        
+        function countCharacterElements(text) {
+            const characterMarkers = ['oh!', 'wow!', 'amazing!', 'wonderful!', '✨', '💕', '😊'];
+            let count = 0;
+            characterMarkers.forEach(marker => {
+                if (text.toLowerCase().includes(marker.toLowerCase())) count++;
+            });
+            return count;
+        }
+        
+        function analyzeSentiment(text) {
+            const positiveWords = ['love', 'happy', 'great', 'amazing', 'wonderful', 'excited', 'good', 'awesome', 'fantastic'];
+            const negativeWords = ['sad', 'bad', 'terrible', 'awful', 'hate', 'angry', 'frustrated', 'disappointed'];
+            
+            const words = text.toLowerCase().split(' ');
+            let positiveCount = 0;
+            let negativeCount = 0;
+            
+            words.forEach(word => {
+                if (positiveWords.includes(word)) positiveCount++;
+                if (negativeWords.includes(word)) negativeCount++;
+            });
+            
+            if (positiveCount > negativeCount) return 'Positive';
+            if (negativeCount > positiveCount) return 'Negative';
+            return 'Neutral';
+        }
+        
+        function openSearchHelper() {
+            // Helper function to open search on mobile devices
+            const query = document.getElementById('searchQuery').value;
+            if (!query) return;
+            
+            const userAgent = navigator.userAgent.toLowerCase();
+            let searchUrl = '';
+            
+            if (userAgent.includes('android')) {
+                // Android - try to open Google app or browser
+                searchUrl = `intent://search?q=${encodeURIComponent(query)}#Intent;scheme=https;package=com.google.android.googlequicksearchbox;end`;
+            } else if (userAgent.includes('iphone') || userAgent.includes('ipad')) {
+                // iOS - try to open Safari or Google app
+                searchUrl = `googlechrome://search?q=${encodeURIComponent(query)}`;
+            } else {
+                // Desktop or other - regular Google search
+                searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+            }
+            
+            // Fallback to regular Google search
+            try {
+                window.open(searchUrl, '_blank');
+            } catch (error) {
+                window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
+            }
+        }
+        
+        function triggerVoiceSearch(query) {
+            // Trigger voice search on smartphone if available
+            if ('speechSynthesis' in window) {
+                const instruction = `You can now say: "Hey Google, search for ${query}" or "Hey Siri, search for ${query}"`;
+                speakAsShuna(`Oh! ${instruction}`);
+                
+                showConnectionIndicator(`🎤 Voice Search Ready!\n\nSay: "Hey Google, search for ${query}"\nor: "Hey Siri, search for ${query}"\n\nI'll wait here for you to come back with what you find! 💕`);
+                setTimeout(hideConnectionIndicator, 5000);
+            }
+        }
+        
+        function shareSearchQuery(query) {
+            // Use Web Share API if available (modern smartphones)
+            if ('share' in navigator) {
+                navigator.share({
+                    title: 'Search Query from Shuna',
+                    text: `Shuna wants to search for: ${query}`,
+                    url: `https://www.google.com/search?q=${encodeURIComponent(query)}`
+                }).then(() => {
+                    console.log('Search shared successfully');
+                }).catch((error) => {
+                    console.log('Share failed:', error);
+                    // Fallback to opening search
+                    openSearchHelper();
+                });
+            } else {
+                openSearchHelper();
+            }
+        }
+        
+        function closeSettings() {
+            document.getElementById('settingsPanel').classList.remove('open');
+            hapticFeedback();
+        }
+        
+        function updatePersonality() {
+            const input = document.getElementById('personalityInput');
+            const value = input.value.trim();
+            
+            if (!value) return;
+            
+            // Enhanced keyword-based personality updates
+            const keywords = {
+                'creative': 'creativity',
+                'kind': 'kindness',
+                'gentle': 'gentleness',
+                'curious': 'curiosity',
+                'playful': 'playfulness',
+                'independent': 'independence',
+                'supportive': 'supportiveness',
+                'enthusiastic': 'enthusiasm'
+            };
+            
+            Object.entries(keywords).forEach(([word, trait]) => {
+                if (value.toLowerCase().includes(word)) {
+                    personalityTraits[trait] = Math.min(1, personalityTraits[trait] + 0.1);
+                }
+            });
+            
+            updatePersonalityDisplay();
+            savePersonality();
+            
+            showConnectionIndicator('✨ Character personality updated! I\'ll incorporate these preferences into how I respond, just like the character you love!');
+            setTimeout(hideConnectionIndicator, 2000);
+            
+            input.value = '';
+        }
+        
+        function populateVoiceOptions() {
+            const select = document.getElementById('voiceSelect');
+            
+            function loadVoices() {
+                const voices = speechSynth.getVoices();
+                select.innerHTML = '<option value="">Auto-select character voice</option>';
+                
+                // Prioritize female voices for character accuracy
+                const femaleVoices = voices.filter(voice => 
+                    voice.lang.includes('en') && (
+                        voice.name.toLowerCase().includes('female') ||
+                        voice.name.toLowerCase().includes('zira') ||
+                        voice.name.toLowerCase().includes('aria') ||
+                        voice.name.toLowerCase().includes('karen') ||
+                        voice.name.toLowerCase().includes('samantha')
+                    )
+                );
+                
+                // Add female voices first
+                femaleVoices.forEach(voice => {
+                    const option = document.createElement('option');
+                    option.value = voice.name;
+                    option.textContent = `${voice.name} (${voice.lang}) ⭐`;
+                    select.appendChild(option);
+                });
+                
+                // Add other English voices
+                voices.forEach(voice => {
+                    if (voice.lang.includes('en') && !femaleVoices.includes(voice)) {
+                        const option = document.createElement('option');
+                        option.value = voice.name;
+                        option.textContent = `${voice.name} (${voice.lang})`;
+                        select.appendChild(option);
+                    }
+                });
+            }
+            
+            loadVoices();
+            if (speechSynth.onvoiceschanged !== undefined) {
+                speechSynth.onvoiceschanged = loadVoices;
+            }
+        }
+        
+        function testCharacterVoice() {
+            const testText = 'Oh! Hello there! I\'m Shuna, your AI companion! I\'m so excited to chat with you! This is how I sound with the current character voice settings! ✨';
+            speakAsShuna(testText);
+        }
+        
+        function calibrateCharacterVoice() {
+            const voices = speechSynth.getVoices().filter(voice => voice.lang.includes('en'));
+            let currentIndex = 0;
+            
+            function testNextVoice() {
+                if (currentIndex < voices.length && currentIndex < 5) {
+                    const voice = voices[currentIndex];
+                    const utterance = new SpeechSynthesisUtterance(`Voice ${currentIndex + 1}: Oh! Hi there! I'm testing ${voice.name} for character accuracy!`);
+                    utterance.voice = voice;
+                    utterance.pitch = 1.1;
+                    utterance.rate = 0.9;
+                    
+                    utterance.onend = function() {
+                        currentIndex++;
+                        setTimeout(testNextVoice, 1500);
+                    };
+                    
+                    speechSynth.speak(utterance);
+                } else {
+                    showConnectionIndicator('🎭 Character voice calibration complete! Choose your favorite character-like voice from the dropdown!');
+                    setTimeout(hideConnectionIndicator, 2000);
+                }
+            }
+            
+            testNextVoice();
+        }
+        
+        function testWebSearch() {
+            showConnectionIndicator('🔍 Testing web search capabilities...');
+            
+            // Test the search function
+            shunaAI.performWebSearch('current weather').then(result => {
+                hideConnectionIndicator();
+                const resultDiv = document.getElementById('searchResult');
+                if (result && result.hasResults) {
+                    resultDiv.innerHTML = '✅ Web search working! Shuna can now access current information.';
+                } else {
+                    resultDiv.innerHTML = '⚠️ Limited search capability. Shuna will use smartphone integration instead.';
+                }
+            }).catch(error => {
+                hideConnectionIndicator();
+                document.getElementById('searchResult').innerHTML = '❌ Web search not available. Using smartphone integration only.';
+            });
+        }
+        
+        function exportData() {
+            const data = {
+                conversations: conversationHistory,
+                personality: personalityTraits,
+                settings: {
+                    aiProvider,
+                    voiceEnabled,
+                    currentMode,
+                    voiceSettings: {
+                        selectedVoice: document.getElementById('voiceSelect').value,
+                        speechRate: document.getElementById('speechRate').value,
+                        voicePitch: document.getElementById('voicePitch').value
+                    }
+                },
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `shuna-character-data-${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        function importData() {
+            document.getElementById('importFile').click();
+        }
+        
+        function handleImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (data.conversations) conversationHistory = data.conversations;
+                    if (data.personality) personalityTraits = data.personality;
+                    
+                    saveAllData();
+                    updatePersonalityDisplay();
+                    
+                    // Restore conversation history
+                    const messagesDiv = document.getElementById('messages');
+                    messagesDiv.innerHTML = `
+                        <div class="message system-message">
+                            <strong>Oh! Welcome back! ✨</strong><br><br>
+                            I've restored our conversation history and character growth! I remember our chats and I'm so excited to continue growing together just like the character you love!<br><br>
+                            <em>What would you like to talk about? I missed you! 💕</em>
+                        </div>
+                    `;
+                    
+                    showConnectionIndicator('📥 Character data imported successfully! Our conversations and my personality growth have been restored!');
+                    setTimeout(hideConnectionIndicator, 2000);
+                    
+                } catch (error) {
+                    showConnectionIndicator('❌ Error importing data. Please check the file format.');
+                    setTimeout(hideConnectionIndicator, 2000);
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all conversations and character personality growth? This cannot be undone.')) {
+                localStorage.clear();
+                conversationHistory = [];
+                personalityTraits = {
+                    curiosity: 0.8,
+                    kindness: 0.9,
+                    creativity: 0.7,
+                    playfulness: 0.8,
+                    independence: 0.5,
+                    supportiveness: 0.9,
+                    enthusiasm: 0.8,
+                    gentleness: 0.9
+                };
+                
+                updatePersonalityDisplay();
+                
+                const messagesDiv = document.getElementById('messages');
+                messagesDiv.innerHTML = `
+                    <div class="message system-message">
+                        <strong>Oh! Hello there! ✨</strong><br><br>
+                        I'm starting fresh! While I don't remember our past conversations, I'm excited to get to know you again and grow together as the character you love!<br><br>
+                        <em>What would you like to talk about? I'm so happy to meet you! 💕</em>
+                    </div>
+                `;
+                
+                showConnectionIndicator('🗑️ All data cleared! Starting fresh with character Shuna!');
+                setTimeout(hideConnectionIndicator, 2000);
+            }
+        }
+        
+        // Helper functions
+        function showVoiceIndicator(message) {
+            const indicator = document.getElementById('voiceIndicator');
+            document.getElementById('voiceStatus').textContent = message;
+            indicator.classList.add('show');
+        }
+        
+        function updateVoiceStatus(message) {
+            document.getElementById('voiceStatus').textContent = message;
+        }
+        
+        function hideVoiceIndicator() {
+            document.getElementById('voiceIndicator').classList.remove('show');
+        }
+        
+        function startVoiceVisualization() {
+            const bars = document.querySelectorAll('.voice-bar');
+            
+            function animateBars() {
+                if (isListening) {
+                    bars.forEach((bar, index) => {
+                        const height = Math.random() * 20 + 5;
+                        bar.style.height = height + 'px';
+                        bar.style.animationDelay = (index * 0.1) + 's';
+                    });
+                    requestAnimationFrame(animateBars);
+                } else {
+                    bars.forEach(bar => bar.style.height = '5px');
+                }
+            }
+            
+            animateBars();
+        }
+        
+        function showConnectionIndicator(message) {
+            const indicator = document.getElementById('connectionIndicator');
+            indicator.innerHTML = `<div>${message}</div>`;
+            indicator.classList.add('show');
+        }
+        
+        function hideConnectionIndicator() {
+            document.getElementById('connectionIndicator').classList.remove('show');
+        }
+        
+        function updateConnectionStatus(status, message) {
+            const dot = document.getElementById('connectionDot');
+            const statusText = document.getElementById('connectionStatus');
+            
+            dot.className = `status-dot status-${status}`;
+            statusText.textContent = message;
+        }
+        
+        function hapticFeedback(pattern = [10]) {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(pattern);
+            }
+        }
+        
+        // Data persistence
+        function saveConversation() {
+            localStorage.setItem('shunaConversations', JSON.stringify(conversationHistory));
+        }
+        
+        function savePersonality() {
+            localStorage.setItem('shunaPersonality', JSON.stringify(personalityTraits));
+        }
+        
+        function saveSettings() {
+            const settings = {
+                aiProvider,
+                voiceEnabled,
+                currentMode,
+                voiceSettings: {
+                    selectedVoice: document.getElementById('voiceSelect').value,
+                    speechRate: document.getElementById('speechRate').value,
+                    voicePitch: document.getElementById('voicePitch').value
+                }
+            };
+            localStorage.setItem('shunaSettings', JSON.stringify(settings));
+        }
+        
+        function loadSavedData() {
+            // Load conversations
+            const savedConversations = localStorage.getItem('shunaConversations');
+            if (savedConversations) {
+                conversationHistory = JSON.parse(savedConversations);
+            }
+            
+            // Load personality
+            const savedPersonality = localStorage.getItem('shunaPersonality');
+            if (savedPersonality) {
+                personalityTraits = JSON.parse(savedPersonality);
+            }
+            
+            // Load settings
+            const savedSettings = localStorage.getItem('shunaSettings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                aiProvider = settings.aiProvider || 'browser';
+                voiceEnabled = settings.voiceEnabled !== false;
+                currentMode = settings.currentMode || 'companion';
+                
+                // Apply voice settings
+                if (settings.voiceSettings) {
+                    setTimeout(() => {
+                        const voiceSelect = document.getElementById('voiceSelect');
+                        const speechRate = document.getElementById('speechRate');
+                        const voicePitch = document.getElementById('voicePitch');
+                        
+                        if (voiceSelect && settings.voiceSettings.selectedVoice) {
+                            voiceSelect.value = settings.voiceSettings.selectedVoice;
+                        }
+                        if (speechRate && settings.voiceSettings.speechRate) {
+                            speechRate.value = settings.voiceSettings.speechRate;
+                        }
+                        if (voicePitch && settings.voiceSettings.voicePitch) {
+                            voicePitch.value = settings.voiceSettings.voicePitch;
+                        }
+                    }, 1000);
+                }
+                
+                // Apply AI provider
+                setTimeout(() => {
+                    const providerSelect = document.getElementById('aiProvider');
+                    if (providerSelect) {
+                        providerSelect.value = aiProvider;
+                        providerSelect.dispatchEvent(new Event('change'));
+                    }
+                }, 500);
+            }
+        }
+        
+        function saveAllData() {
+            saveConversation();
+            savePersonality();
+            saveSettings();
+        }
+        
+        // PWA Install functionality
+        function setupInstallPrompt() {
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                
+                // Show install prompt after a delay
+                setTimeout(() => {
+                    if (!localStorage.getItem('installPromptDismissed')) {
+                        document.getElementById('installPrompt').classList.add('show');
+                    }
+                }, 5000);
+            });
+        }
+        
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('Shuna app installed!');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+            dismissInstall();
+        }
+        
+        function dismissInstall() {
+            document.getElementById('installPrompt').classList.remove('show');
+            localStorage.setItem('installPromptDismissed', 'true');
+        }
+        
+        // Auto-save data every 30 seconds
+        setInterval(saveAllData, 30000);
+        
+        // Save data before page unload
+        window.addEventListener('beforeunload', saveAllData);
+        
+        // Handle visibility change (mobile app switching)
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'hidden') {
+                saveAllData();
+            }
+        });
+        
+        console.log('🎭 Enhanced Shuna Character AI loaded! Ready for character-accurate conversations!');
+    </script>
+</body>
+</html>

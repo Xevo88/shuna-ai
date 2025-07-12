@@ -1,0 +1,64 @@
+{
+  "name": "Shuna - AI Companion",
+  "short_name": "Shuna",
+  "description": "Your personal AI companion that learns and grows with you",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#8a2be2",
+  "orientation": "portrait-primary",
+  "scope": "./",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiM4YTJiZTIiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Im0xMiAyIDIgMnYyaDJ2LTJoMnYyaDJ2MmgtMnYyaDJ2MmgtMnYyaDJ2MmgtMnYyaC0ydi0yaC0ydjJoLTJ2LTJoLTJ2LTJoMnYtMmgtMnYtMmgydi0yaC0ydi0yaDJ2LTJoLTJ2LTJoMnYtMmgtMnYtMmgydi0yaC0ydi0yaDJ2LTJoMnYtMmgyWiIvPgo8L3N2Zz4KPC9zdmc+",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiM4YTJiZTIiLz4KPHN2ZyB4PSIxMjgiIHk9IjEyOCIgd2lkdGg9IjI1NiIgaGVpZ2h0PSIyNTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPgo8cGF0aCBkPSJtMTIgMiAyIDJ2Mmgydi0yaDJ2MmgydjJoLTJ2MmgydjJoLTJ2MmgydjJoLTJ2MmgtMnYtMmgtMnYyaC0ydi0yaC0ydi0yaDJ2LTJoLTJ2LTJoMnYtMmgtMnYtMmgydi0yaC0ydi0yaDJ2LTJoLTJ2LTJoMnYtMmgtMnYtMmgydi0yaDJ2LTJoMloiLz4KPC9zdmc+Cjwvc3ZnPg==",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjU2OCIgdmlld0JveD0iMCAwIDMyMCA1NjgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMjAiIGhlaWdodD0iNTY4IiBmaWxsPSIjMWExYTJlIi8+CjxyZWN0IHg9IjIwIiB5PSI2MCIgd2lkdGg9IjI4MCIgaGVpZ2h0PSI0MCIgcng9IjIwIiBmaWxsPSIjOGEyYmUyIi8+CjxyZWN0IHg9IjIwIiB5PSIxMjAiIHdpZHRoPSIyMDAiIGhlaWdodD0iNDAiIHJ4PSIyMCIgZmlsbD0iIzhhMmJlMiIvPgo8cmVjdCB4PSIyMCIgeT0iMTgwIiB3aWR0aD0iMjQwIiBoZWlnaHQ9IjQwIiByeD0iMjAiIGZpbGw9IiNkYzcwZDYiLz4KPHN2ZyB4PSIyNDAiIHk9IjUwMCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9IndoaXRlIj4KPGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiM4YTJiZTIiLz4KPC9zdmc+Cjwvc3ZnPg==",
+      "sizes": "320x568",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    }
+  ],
+  "categories": ["productivity", "social", "entertainment"],
+  "shortcuts": [
+    {
+      "name": "Start Voice Chat",
+      "short_name": "Voice",
+      "description": "Begin a voice conversation with Shuna",
+      "url": "./?mode=voice",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0VjEySDE0QzE0IDE1LjMxIDExLjMxIDE4IDggMThDNC42OSAxOCAyIDE1LjMxIDIgMTJIMlY0QzIgMi45IDIuOSAyIDQgMkgxMlpNMTYgMTJWMTRDMTYgMTcuNzQgMTMuNDIgMjAuOTEgMTAgMjAuOTlWMjJIOFYyMC45OUM0LjU4IDIwLjkxIDIgMTcuNzQgMiAxNFYxMkg0VjE0QzQgMTYuNzYgNi4yNCAxOSA5IDE5UzE0IDE2Ljc2IDE0IDE0VjEySDEyWiIgZmlsbD0iIzhhMmJlMiIvPgo8L3N2Zz4K",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Writing Mode",
+      "short_name": "Write",
+      "description": "Start creative writing with Shuna",
+      "url": "./?mode=writing",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMgMTdIMjFWMTlIM1YxN1pNMyA3SDIxVjlIM1Y3Wk0zIDEySDE1VjE0SDNWMTJaIiBmaWxsPSIjOGEyYmUyIi8+Cjwvc3ZnPgo=",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false
+}

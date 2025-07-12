@@ -1,0 +1,2 @@
+# shuna-ai
+ai-companion
